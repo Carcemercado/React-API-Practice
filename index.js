@@ -5,9 +5,21 @@ const baseUrl = 'https://api.github.com/users/';
 
 function App(){
     const [username, setUsername] = React.useState('carcemercado');
-
     const [user, setUser] = React.useState(null);
 
+    const searchInput = React.useRef();
+
+    React.useEffect( () =>{
+            getUser();
+            // fetch(endpoint)
+            //     .then(response => response.json())
+            //     .then(data => setUser(data));
+        }, []);
+    
+    function handleClearInput(){
+        searchInput.current.value = '';
+        searchInput.current.focus();
+    }
     async function getUser(){
         const response = await fetch(`${baseUrl}${username}`)
         const data = await response.json();
@@ -15,21 +27,18 @@ function App(){
 
     }
     
-    React.useEffect( () =>{
-        getUser();
-        // fetch(endpoint)
-        //     .then(response => response.json())
-        //     .then(data => setUser(data));
-    }, []);
+    
 
     return (
     <div>
         <input
          type='text'
          placeholder='Input username'
-         onChange={event => setUsername(event.target.value)}   />
+         onChange={event => setUsername(event.target.value)} 
+         ref={searchInput}
+        />
         <button onClick={getUser} >Search</button>
-        <button>Clear</button>
+        <button onClick={handleClearInput} >Clear</button>
 
         {user ? (
             <div>
